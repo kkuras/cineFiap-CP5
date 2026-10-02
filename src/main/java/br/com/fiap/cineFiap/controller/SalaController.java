@@ -1,5 +1,6 @@
 package br.com.fiap.cineFiap.controller;
 
+import br.com.fiap.cineFiap.exceptions.FilmeNaoExisteException;
 import br.com.fiap.cineFiap.models.Sala;
 import br.com.fiap.cineFiap.service.SalaService;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/salas")
@@ -27,13 +29,13 @@ public class SalaController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sala> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Object> buscarPorId(@PathVariable Long id) {
 
         try {
             Sala sala = service.buscarPorId(id);
             return ResponseEntity.ok(sala);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+        } catch (FilmeNaoExisteException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -62,6 +64,8 @@ public class SalaController {
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
+        } catch (FilmeNaoExisteException e) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se não existir
         }
     }
 

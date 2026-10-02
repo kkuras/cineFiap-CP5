@@ -52,10 +52,10 @@ public class SalaService {
             throw new IllegalArgumentException("nao pode ser nulo");
 
         var existe = saladao.buscarPorId(sala.getId());
-        if (existe.getId() != null) {
+        if (existe != null) {
             saladao.alterar(sala);
         } else {
-            throw new FilmeNaoExisteException("pai, nao acho nada");
+            throw new IllegalArgumentException("pai, nao acho nada");
         }
     }
 
